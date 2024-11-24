@@ -57,16 +57,14 @@ public class PlayerController : MonoBehaviour
             {
                 animator.SetBool("isRunning", true);
                 animator.SetBool("isIdle", false);
-                animator.SetBool("isJumpUp", false);
-                animator.SetBool("isJumpDown", false);
             }
             else
             {
                 animator.SetBool("isRunning", false);
                 animator.SetBool("isIdle", true);
-                animator.SetBool("isJumpUp", false);
-                animator.SetBool("isJumpDown", false);
             }
+            animator.SetBool("isJumpUp", false);
+            animator.SetBool("isJumpDown", false);
         }
         else
         {
