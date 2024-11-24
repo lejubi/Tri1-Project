@@ -83,8 +83,8 @@ public class PlayerController : MonoBehaviour
         }
 
         if (horizontalMove > 0)
-            transform.localScale = new Vector3(20, 20, 20);
+            transform.localScale = new Vector3(15, 15, 15);
         else if (horizontalMove < 0)
-            transform.localScale = new Vector3(-20, 20, 20);
+            transform.localScale = new Vector3(-15, 15, 15);
     }
 }
