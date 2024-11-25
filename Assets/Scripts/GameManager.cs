@@ -20,8 +20,8 @@ public class GameManager : MonoBehaviour
 
     public void GameOver()
     {
-        gameOverScreen.SetActive(true);
         isGameActive = false;
+        gameOverScreen.SetActive(true);
     }
 
     public void RestartGame()
