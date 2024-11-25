@@ -5,7 +5,7 @@ public class PlayerController : MonoBehaviour
     private Animator animator;
     private Rigidbody2D rb;
     
-    [SerializeField] private float moveSpeed = 5f;
+    [SerializeField] private float moveSpeed = 6f;
     [SerializeField] private float jumpForce = 10f;
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private Transform groundCheck;
