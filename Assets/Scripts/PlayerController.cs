@@ -1,5 +1,5 @@
 using UnityEngine;
-
+using System.Collections.Generic;
 public class PlayerController : MonoBehaviour
 {
     private Animator animator;
@@ -15,12 +15,16 @@ public class PlayerController : MonoBehaviour
     private float horizontalMove = 0f;
     private bool isJumping = false;
     private bool immunity = false;
-    private int health;
+    public int health;
+    public int maxHealth = 3;
+    public List<GameObject> heartContainers = new List<GameObject>();
 
     void Start()
     {
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
+        health = 2;
+        UpdateHealthUI();
         // to prevent rotation of player
         rb.freezeRotation = true; 
     }
@@ -91,16 +95,35 @@ public class PlayerController : MonoBehaviour
     }
 
         // powerup methods
+    public void TakeDamage(int damage)
+    {
+        if(!immunity)
+        {
+            health-=damage;
+            health = Mathf.Clamp(health, 0, maxHealth);
+            UpdateHealthUI();
+        }
+    }
+    public void addHealth(int h)
+    {
+        health+=h;
+        health = Mathf.Clamp(health, 0, maxHealth);
+        UpdateHealthUI();
+    }
+    public void UpdateHealthUI()
+    {
+        HealthUI healthUI = FindObjectOfType<HealthUI>();
+        if(healthUI!=null)
+        {
+            healthUI.InitializeHearts();
+        }
+    }
 
     public void changeSpeed(int speed)
     {
         moveSpeed += speed;
     }
 
-    public void addHealth(int health)
-    {
-
-    }
 
     public void setImmunityTrue()
     {
