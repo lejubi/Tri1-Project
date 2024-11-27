@@ -14,6 +14,8 @@ public class PlayerController : MonoBehaviour
     private bool isGrounded;
     private float horizontalMove = 0f;
     private bool isJumping = false;
+    private bool immunity = false;
+    private int health;
 
     void Start()
     {
@@ -86,5 +88,32 @@ public class PlayerController : MonoBehaviour
             transform.localScale = new Vector3(20, 20, 20);
         else if (horizontalMove < 0)
             transform.localScale = new Vector3(-20, 20, 20);
+    }
+
+        // powerup methods
+
+    public void changeSpeed(int speed)
+    {
+        moveSpeed += speed;
+    }
+
+    public void addHealth(int health)
+    {
+
+    }
+
+    public void setImmunityTrue()
+    {
+        immunity = true;
+    }
+
+    public void setImmunityFalse()
+    {
+        immunity = false;
+    }
+
+    public void changeJumpForce(int force)
+    {
+        jumpForce += force;
     }
 }
