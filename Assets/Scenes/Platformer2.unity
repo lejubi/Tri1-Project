@@ -3375,6 +3375,7 @@ GameObject:
   - component: {fileID: 1689308671}
   - component: {fileID: 1689308673}
   - component: {fileID: 1689308672}
+  - component: {fileID: 1689308674}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -3391,11 +3392,11 @@ Transform:
   m_GameObject: {fileID: 1689308670}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.27, z: -0.5}
-  m_LocalScale: {x: 0.05, y: 0.05, z: 0.05}
+  m_LocalPosition: {x: -0.44, y: 5.5, z: -10}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1925737290}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!81 &1689308672
 AudioListener:
@@ -3456,6 +3457,21 @@ Camera:
   m_OcclusionCulling: 0
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
+--- !u!114 &1689308674
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1689308670}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a9a6232fe8d2c5488c2f176221884f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 1925737290}
+  smoothSpeed: 0.125
+  offset: {x: 0, y: 0.54, z: 0}
 --- !u!1001 &1754964829
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4046,7 +4062,6 @@ Transform:
   m_LocalScale: {x: 20, y: 20, z: 20}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1689308671}
   - {fileID: 368234967}
   - {fileID: 1246160627}
   m_Father: {fileID: 0}
@@ -4164,6 +4179,7 @@ MonoBehaviour:
   spacing: 3
   offset: {x: 2, y: 2, z: 0}
   mainCamera: {fileID: 1689308673}
+  smoothFactor: 5
 --- !u!1 &2113069160 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6896428120236788569, guid: 7e172d1f9e4ce44e9a5faa46388cadab, type: 3}
@@ -4872,3 +4888,4 @@ SceneRoots:
   - {fileID: 1368181107271677342}
   - {fileID: 811473926}
   - {fileID: 304101412}
+  - {fileID: 1689308671}
