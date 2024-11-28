@@ -9,8 +9,10 @@ public class HealthUI : MonoBehaviour
     public Transform heartContainer;
     private List<GameObject> hearts = new List<GameObject>();
     public float spacing = 1f; 
-    public Vector3 offset = new Vector3(2f, 2f, 1f); 
+    public Vector3 offset = new Vector3(2f, 2f, 0f); 
     public Camera mainCamera;
+    private Vector3 currentHeartPosition;
+    public float smoothFactor = 5f;
 
     void Start()
     {
@@ -35,6 +37,7 @@ public class HealthUI : MonoBehaviour
         for (int i = 0; i < player.maxHealth; i++)
         {
             GameObject heart = Instantiate(i < player.health ? heartPrefab : emptyHeartPrefab, heartContainer);
+            heart.SetActive(true);
             hearts.Add(heart);
         }
 
@@ -48,15 +51,16 @@ public class HealthUI : MonoBehaviour
         float viewportHeight = 2f * mainCamera.orthographicSize;
         float viewportWidth = viewportHeight * mainCamera.aspect;
 
-        Vector3 topRight = mainCamera.transform.position + new Vector3(viewportWidth / 2, viewportHeight / 2, 1);
+        Vector3 topRight = mainCamera.transform.position + new Vector3(viewportWidth / 2, viewportHeight / 2, 0);
 
-        Vector3 startPosition = topRight - offset;
+        Vector3 newPos = topRight - offset;
+        currentHeartPosition = Vector3.Lerp(currentHeartPosition, newPos, Time.deltaTime * smoothFactor);
 
         for (int i = 0; i < hearts.Count; i++)
         {
             if (hearts[i] == null) continue;
 
-            Vector3 heartPosition = startPosition - new Vector3(i * spacing, 0, 1);
+            Vector3 heartPosition = currentHeartPosition - new Vector3(i * spacing, 0, 0);
             
             hearts[i].transform.position = heartPosition;
 
