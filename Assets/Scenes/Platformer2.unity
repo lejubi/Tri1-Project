@@ -944,7 +944,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5537374185550096279, guid: 6804390452042434baec159caeabd5f1, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 17.03
+      value: 15.88
       objectReference: {fileID: 0}
     - target: {fileID: 5537374185550096279, guid: 6804390452042434baec159caeabd5f1, type: 3}
       propertyPath: m_LocalPosition.y
@@ -2648,7 +2648,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 6283695695836017453, guid: 7e172d1f9e4ce44e9a5faa46388cadab, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 39.49
+      value: 39.43
       objectReference: {fileID: 0}
     - target: {fileID: 6283695695836017453, guid: 7e172d1f9e4ce44e9a5faa46388cadab, type: 3}
       propertyPath: m_LocalPosition.y
@@ -3988,6 +3988,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4be99956584a565439d3f574fd669b0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  powerup: 0
   moveSpeed: 5
   jumpForce: 10
   groundLayer:
@@ -3995,6 +3996,7 @@ MonoBehaviour:
     m_Bits: 256
   groundCheck: {fileID: 368234967}
   groundCheckRadius: 0.2
+  hasPowerup: 0
 --- !u!95 &1925737289
 Animator:
   serializedVersion: 5

@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -16,6 +18,14 @@ public class PlayerController : MonoBehaviour
     private bool isGrounded;
     private float horizontalMove = 0f;
     private bool isJumping = false;
+    public bool hasPowerup;
+
+    enum Powerup {
+        Jump,
+        Speed,
+        Health,
+        Immunity
+    }
 
     void Start()
     {
@@ -28,8 +38,8 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        moveSpeed = powerup.speed;
-        jumpForce = powerup.jump;
+        // moveSpeed = powerup.speed;
+        // jumpForce = powerup.jump;
         // checking if player is on the ground and if they are trying to move or jump
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
         horizontalMove = Input.GetAxisRaw("Horizontal") * moveSpeed;
@@ -91,5 +101,40 @@ public class PlayerController : MonoBehaviour
             transform.localScale = new Vector3(20, 20, 20);
         else if (horizontalMove < 0)
             transform.localScale = new Vector3(-20, 20, 20);
+    }
+
+    IEnumerator PowerupCountdownRoutine() {
+        // replace this with invoke
+        // call powerup methods here
+        switch(powerup)
+        {
+            case Powerup.Jump:
+                Debug.Log("Jump powerup");
+                break;
+            case Powerup.Speed:
+                Debug.Log("Speed powerup");
+                break;
+            case Powerup.Health:
+                Debug.Log("Health powerup");
+                break;
+            case Powerup.Immunity:
+                Debug.Log("Immunity powerup");
+                break;
+            
+        }
+        yield return new WaitForSeconds(5);
+        hasPowerup = false;
+    }
+
+    // code to check if player has collided with powerup
+    private void OnCollisionEnter (Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Powerup"))
+        {
+            hasPowerup = true;
+            Debug.Log("Collided with " + collision.gameObject.name + " with powerup set to " + hasPowerup);
+            Destroy(collision.gameObject);
+            StartCoroutine(PowerupCountdownRoutine());
+        }
     }
 }
