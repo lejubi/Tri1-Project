@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Collections;
 public class PlayerController : MonoBehaviour
 {
 
@@ -12,25 +13,25 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private Transform groundCheck;
     [SerializeField] private float groundCheckRadius = 0.1f;
-
+    [SerializeField] private LayerMask harmfulObjectLayer;
+    [SerializeField] private float invincibilityDuration = 1f;
     private bool isGrounded;
     private float horizontalMove = 0f;
     private bool isJumping = false;
     private bool immunity = false;
     public int health;
     public int maxHealth = 3;
+    private SpriteRenderer spriteRenderer;
 
     void Start()
     {
-        Debug.Log(powerup.speed);
-        Debug.Log(powerup.jump);
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
-        health = 2;
+        health = maxHealth;
         UpdateHealthUI();
         // to prevent rotation of player
         rb.freezeRotation = true;
-
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     void Update()
@@ -108,8 +109,41 @@ public class PlayerController : MonoBehaviour
             health-=damage;
             health = Mathf.Clamp(health, 0, maxHealth);
             UpdateHealthUI();
+            if (health <= 0)
+            {
+                Debug.Log("Player has died!");
+            }
         }
     }
+    private void OnTriggerEnter2D(Collider2D collider)
+    {
+        if (collider.gameObject.layer == LayerMask.NameToLayer("HarmfulObject"))
+        {
+            if (immunity == false)
+            {
+                TakeDamage(1);
+                StartCoroutine(InvincibilityFrames());
+            }
+        }
+    }
+    private IEnumerator InvincibilityFrames()
+    {
+        immunity = true;
+        StartCoroutine(FlickerEffect());
+        yield return new WaitForSeconds(invincibilityDuration);
+        immunity = false;
+        spriteRenderer.enabled = true;
+    }
+    private IEnumerator FlickerEffect()
+{
+    float flickerInterval = 0.1f; 
+    while (immunity)
+    {
+        spriteRenderer.enabled = !spriteRenderer.enabled;
+        yield return new WaitForSeconds(flickerInterval);
+    }
+    spriteRenderer.enabled = true; 
+}
     public void addHealth(int h)
     {
         health+=h;
