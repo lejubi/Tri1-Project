@@ -2,11 +2,13 @@ using UnityEngine;
 using System.Collections.Generic;
 public class PlayerController : MonoBehaviour
 {
+
     private Animator animator;
     private Rigidbody2D rb;
-    
-    [SerializeField] private float moveSpeed = 8f;
-    [SerializeField] private float jumpForce = 3f;
+
+    [SerializeField] private Powerup powerup;
+    [SerializeField] private float moveSpeed;
+    [SerializeField] private float jumpForce;
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private Transform groundCheck;
     [SerializeField] private float groundCheckRadius = 0.1f;
@@ -26,11 +28,14 @@ public class PlayerController : MonoBehaviour
         health = 2;
         UpdateHealthUI();
         // to prevent rotation of player
-        rb.freezeRotation = true; 
+        rb.freezeRotation = true;
+
     }
 
     void Update()
     {
+        moveSpeed = powerup.speed;
+        jumpForce = powerup.jump;
         // checking if player is on the ground and if they are trying to move or jump
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
         horizontalMove = Input.GetAxisRaw("Horizontal") * moveSpeed;
@@ -74,7 +79,7 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            if (rb.velocity.y > 0 )
+            if (rb.velocity.y > 0)
             {
                 animator.SetBool("isJumpUp", true);
                 animator.SetBool("isJumpDown", false);

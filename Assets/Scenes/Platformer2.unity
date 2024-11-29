@@ -2652,6 +2652,70 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 6896428120236788569, guid: 7e172d1f9e4ce44e9a5faa46388cadab, type: 3}
   m_PrefabInstance: {fileID: 2141403169}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1489851255
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1489851257}
+  - component: {fileID: 1489851256}
+  m_Layer: 0
+  m_Name: PowerupManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1489851256
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1489851255}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e92452729ace2d48842802684240d64, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  powerups:
+  - prefab: {fileID: 6326231431454076518, guid: d21bde03bb3654c48b8debfeaf102cc0, type: 3}
+    weight: 1
+  - prefab: {fileID: 3283526662113910394, guid: 34733c9762fbd6842b3883a5954826b9, type: 3}
+    weight: 1
+  - prefab: {fileID: 9183745561459366525, guid: 01a566d3b90679742a16f2053bad1e2f, type: 3}
+    weight: 1
+  - prefab: {fileID: 9101063323961984443, guid: 7cab516613dba4a43b51f491cdba916f, type: 3}
+    weight: 1
+  - prefab: {fileID: 8172275390935749834, guid: 900c073e00e01714fa3f339fb99311fb, type: 3}
+    weight: 1
+  minSpawnInterval: 5
+  maxSpawnInterval: 15
+  spawnHeight: 30
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 256
+  player: {fileID: 1925737284}
+  minSpawnDistance: 5
+  maxSpawnDistance: 15
+--- !u!4 &1489851257
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1489851255}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 20.663065, y: 12.058935, z: 0.04575789}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1491679515
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4889,3 +4953,4 @@ SceneRoots:
   - {fileID: 811473926}
   - {fileID: 304101412}
   - {fileID: 1689308671}
+  - {fileID: 1489851257}
