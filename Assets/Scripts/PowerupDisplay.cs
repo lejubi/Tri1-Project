@@ -10,6 +10,6 @@ public class PowerupDisplay : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        powerup.Print();
     }
 }

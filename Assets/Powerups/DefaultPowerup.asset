@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d2d362c9ecad46189f6a5a870454e5d, type: 3}
   m_Name: DefaultPowerup
   m_EditorClassIdentifier: 
-  name: 
+  name: Default
   jumpForce: 2
   speed: 2
   immunity: 0

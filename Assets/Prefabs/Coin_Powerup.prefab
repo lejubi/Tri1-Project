@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 9122205470304459808}
   - component: {fileID: 2039620345657614130}
   - component: {fileID: -8816001163758275359}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Coin_Powerup
   m_TagString: Powerup
   m_Icon: {fileID: 0}

@@ -21,6 +21,7 @@ public class PlayerController : MonoBehaviour
     public bool hasPowerup;
 
     enum Powerup {
+        Default,
         Jump,
         Speed,
         Health,
@@ -103,9 +104,12 @@ public class PlayerController : MonoBehaviour
             transform.localScale = new Vector3(-20, 20, 20);
     }
 
-    IEnumerator PowerupCountdownRoutine() {
-        // replace this with invoke
-        // call powerup methods here
+    private void PowerupCountdownRoutine() {
+        Invoke(nameof(PowerupEffects), 5);
+    }
+
+    private void PowerupEffects()
+    {
         switch(powerup)
         {
             case Powerup.Jump:
@@ -122,19 +126,36 @@ public class PlayerController : MonoBehaviour
                 break;
             
         }
-        yield return new WaitForSeconds(5);
         hasPowerup = false;
     }
 
     // code to check if player has collided with powerup
-    private void OnCollisionEnter (Collision collision)
+    private void OnTriggerEnter2D (Collider2D other)
     {
-        if (collision.gameObject.CompareTag("Powerup"))
+        if (other.CompareTag("Powerup"))
         {
             hasPowerup = true;
-            Debug.Log("Collided with " + collision.gameObject.name + " with powerup set to " + hasPowerup);
-            Destroy(collision.gameObject);
-            StartCoroutine(PowerupCountdownRoutine());
+            Debug.Log("Collided with powerup");
+            switch(other.name)
+            {
+                case "Default":
+                    powerup = Powerup.Default;
+                    break;
+                case "Health":
+                    powerup = Powerup.Health;
+                    break;
+                case "Immunity":
+                    powerup = Powerup.Immunity;
+                    break;
+                case "Jump":
+                    powerup = Powerup.Jump;
+                    break;
+                case "Speed":
+                    powerup = Powerup.Speed;
+                    break;
+            }
+            Destroy(other.gameObject);
+            PowerupCountdownRoutine();
         }
     }
 }

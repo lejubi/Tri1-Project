@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4498152485101684888}
   - component: {fileID: 2598223697307908776}
   - component: {fileID: 9054256201131194499}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Immunity_Powerup
   m_TagString: Powerup
   m_Icon: {fileID: 0}
