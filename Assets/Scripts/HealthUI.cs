@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Collections;
 
 public class HealthUI : MonoBehaviour
 {
@@ -13,6 +14,7 @@ public class HealthUI : MonoBehaviour
     public Camera mainCamera;
     private Vector3 currentHeartPosition;
     public float smoothFactor = 5f;
+    public float flickerDuration = 1f;
 
     void Start()
     {
@@ -28,6 +30,8 @@ public class HealthUI : MonoBehaviour
 
     public void InitializeHearts()
     {
+        int previousHeartCount = hearts.Count;
+
         foreach (var heart in hearts)
         {
             Destroy(heart);
@@ -40,7 +44,37 @@ public class HealthUI : MonoBehaviour
             heart.SetActive(true);
             hearts.Add(heart);
         }
+        if (previousHeartCount > player.health && previousHeartCount > 0)
+        {
+            StartCoroutine(FlickerHearts(previousHeartCount - player.health));
+        }
+        else
+        {
+            UpdateHeartPositions();
 
+        }
+    }
+
+    private IEnumerator FlickerHearts(int heartsToFlicker)
+    {
+        float elapsedTime = 0f;
+        float flickerInterval = 0.1f;
+
+        while (elapsedTime < flickerDuration)
+        {
+            for (int i = player.health; i < player.health + heartsToFlicker; i++)
+            {
+                if (i < hearts.Count)
+                {
+                    hearts[i].SetActive(!hearts[i].activeSelf);
+                }
+            }
+
+            elapsedTime += flickerInterval;
+            yield return new WaitForSeconds(flickerInterval);
+        }
+
+        UpdateHearts();
         UpdateHeartPositions();
     }
 
@@ -84,5 +118,6 @@ public class HealthUI : MonoBehaviour
                 hearts[i].GetComponent<SpriteRenderer>().sprite = emptyHeartPrefab.GetComponent<SpriteRenderer>().sprite;
             }
         }
+        UpdateHeartPositions();
     }
 }
