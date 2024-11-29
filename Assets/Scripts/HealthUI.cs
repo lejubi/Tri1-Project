@@ -65,6 +65,7 @@ public class HealthUI : MonoBehaviour
             hearts[i].transform.position = heartPosition;
 
             hearts[i].transform.forward = -mainCamera.transform.forward;
+            hearts[i].transform.position = new Vector3(hearts[i].transform.position.x, hearts[i].transform.position.y, 0);
         }
     }
 

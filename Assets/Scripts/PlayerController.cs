@@ -19,10 +19,11 @@ public class PlayerController : MonoBehaviour
     private bool immunity = false;
     public int health;
     public int maxHealth = 3;
-    public List<GameObject> heartContainers = new List<GameObject>();
 
     void Start()
     {
+        Debug.Log(powerup.speed);
+        Debug.Log(powerup.jump);
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
         health = 2;
@@ -34,12 +35,12 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        moveSpeed = powerup.speed;
-        jumpForce = powerup.jump;
+        moveSpeed += powerup.speed;
+        jumpForce += powerup.jump;
         // checking if player is on the ground and if they are trying to move or jump
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
         horizontalMove = Input.GetAxisRaw("Horizontal") * moveSpeed;
-
+        
         if (Input.GetKeyDown(KeyCode.UpArrow) && isGrounded)
         {
             isJumping = true;

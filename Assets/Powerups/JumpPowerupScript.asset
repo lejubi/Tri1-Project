@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: JumpPowerupScript
   m_EditorClassIdentifier: 
   jump: 6
-  speed: 8
+  speed: 1
