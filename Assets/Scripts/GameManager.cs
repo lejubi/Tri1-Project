@@ -9,7 +9,6 @@ public class GameManager : MonoBehaviour
 
     public GameObject titleScreen;
     public GameObject gameOverScreen;
-
     public bool isGameActive;
 
     public void StartGame()

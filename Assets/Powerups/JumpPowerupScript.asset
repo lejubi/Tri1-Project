@@ -17,3 +17,4 @@ MonoBehaviour:
   speed: 0
   immunity: 0
   health: 0
+  // jump: 6

@@ -1,7 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using System.Collections.Generic;
+using System.Collections;
 public class PlayerController : MonoBehaviour
 {
 
@@ -14,7 +15,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private Transform groundCheck;
     [SerializeField] private float groundCheckRadius = 0.1f;
-
+    [SerializeField] private LayerMask harmfulObjectLayer;
+    [SerializeField] private float invincibilityDuration = 1f;
     private bool isGrounded;
     private float horizontalMove = 0f;
     private bool isJumping = false;
@@ -28,23 +30,32 @@ public class PlayerController : MonoBehaviour
         Immunity
     }
 
+    private bool immunity = false;
+    public int health;
+    public int maxHealth = 3;
+    private SpriteRenderer spriteRenderer;
+
     void Start()
     {
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
+        health = maxHealth;
+        UpdateHealthUI();
         // to prevent rotation of player
         rb.freezeRotation = true;
-
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     void Update()
     {
         // moveSpeed = powerup.speed;
         // jumpForce = powerup.jump;
+        moveSpeed += powerup.speed;
+        jumpForce += powerup.jump;
         // checking if player is on the ground and if they are trying to move or jump
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
         horizontalMove = Input.GetAxisRaw("Horizontal") * moveSpeed;
-
+        
         if (Input.GetKeyDown(KeyCode.UpArrow) && isGrounded)
         {
             isJumping = true;
@@ -99,9 +110,88 @@ public class PlayerController : MonoBehaviour
         }
 
         if (horizontalMove > 0)
-            transform.localScale = new Vector3(20, 20, 20);
+            transform.localScale = new Vector2(20, 20);
         else if (horizontalMove < 0)
-            transform.localScale = new Vector3(-20, 20, 20);
+            transform.localScale = new Vector2(-20, 20);
+    }
+
+        // powerup methods
+    public void TakeDamage(int damage)
+    {
+        if(!immunity)
+        {
+            health-=damage;
+            health = Mathf.Clamp(health, 0, maxHealth);
+            UpdateHealthUI();
+            if (health <= 0)
+            {
+                Debug.Log("Player has died!");
+            }
+        }
+    }
+    private void OnTriggerEnter2D(Collider2D collider)
+    {
+        if (collider.gameObject.layer == LayerMask.NameToLayer("HarmfulObject"))
+        {
+            if (immunity == false)
+            {
+                TakeDamage(1);
+                StartCoroutine(InvincibilityFrames());
+            }
+        }
+    }
+    private IEnumerator InvincibilityFrames()
+    {
+        immunity = true;
+        StartCoroutine(FlickerEffect());
+        yield return new WaitForSeconds(invincibilityDuration);
+        immunity = false;
+        spriteRenderer.enabled = true;
+    }
+    private IEnumerator FlickerEffect()
+{
+    float flickerInterval = 0.1f; 
+    while (immunity)
+    {
+        spriteRenderer.enabled = !spriteRenderer.enabled;
+        yield return new WaitForSeconds(flickerInterval);
+    }
+    spriteRenderer.enabled = true; 
+}
+    public void addHealth(int h)
+    {
+        health+=h;
+        health = Mathf.Clamp(health, 0, maxHealth);
+        UpdateHealthUI();
+    }
+    public void UpdateHealthUI()
+    {
+        HealthUI healthUI = FindObjectOfType<HealthUI>();
+        if(healthUI!=null)
+        {
+            healthUI.InitializeHearts();
+        }
+    }
+
+    public void changeSpeed(int speed)
+    {
+        moveSpeed += speed;
+    }
+
+
+    public void setImmunityTrue()
+    {
+        immunity = true;
+    }
+
+    public void setImmunityFalse()
+    {
+        immunity = false;
+    }
+
+    public void changeJumpForce(int force)
+    {
+        jumpForce += force;
     }
 
     private void PowerupCountdownRoutine() {
