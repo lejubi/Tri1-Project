@@ -48,10 +48,6 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        // moveSpeed = powerup.speed;
-        // jumpForce = powerup.jump;
-        moveSpeed += powerup.speed;
-        jumpForce += powerup.jump;
         // checking if player is on the ground and if they are trying to move or jump
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
         horizontalMove = Input.GetAxisRaw("Horizontal") * moveSpeed;
@@ -220,13 +216,15 @@ public class PlayerController : MonoBehaviour
     }
 
     // code to check if player has collided with powerup
-    private void OnTriggerEnter2D (Collider2D other)
+    // need to fix
+    private void OnCollisionEnter (Collision collisionInfo)
     {
-        if (other.CompareTag("Powerup"))
+        Debug.Log("Collided with something");
+        if (collisionInfo.collider.tag == "Powerup");
         {
-            hasPowerup = true;
             Debug.Log("Collided with powerup");
-            switch(other.name)
+            hasPowerup = true;
+            switch(collisionInfo.collider.name)
             {
                 case "Default":
                     powerup = Powerup.Default;
@@ -244,7 +242,7 @@ public class PlayerController : MonoBehaviour
                     powerup = Powerup.Speed;
                     break;
             }
-            Destroy(other.gameObject);
+            Destroy(collisionInfo.collider.gameObject);
             PowerupCountdownRoutine();
         }
     }
