@@ -22,7 +22,8 @@ public class PlayerController : MonoBehaviour
     private bool isJumping = false;
     public bool hasPowerup;
 
-    enum Powerup {
+    enum Powerup
+    {
         Default,
         Jump,
         Speed,
@@ -55,7 +56,7 @@ public class PlayerController : MonoBehaviour
         // checking if player is on the ground and if they are trying to move or jump
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
         horizontalMove = Input.GetAxisRaw("Horizontal") * moveSpeed;
-        
+
         if (Input.GetKeyDown(KeyCode.UpArrow) && isGrounded)
         {
             isJumping = true;
@@ -115,12 +116,12 @@ public class PlayerController : MonoBehaviour
             transform.localScale = new Vector2(-20, 20);
     }
 
-        // powerup methods
+    // powerup methods
     public void TakeDamage(int damage)
     {
-        if(!immunity)
+        if (!immunity)
         {
-            health-=damage;
+            health -= damage;
             health = Mathf.Clamp(health, 0, maxHealth);
             UpdateHealthUI();
             if (health <= 0)
@@ -149,25 +150,25 @@ public class PlayerController : MonoBehaviour
         spriteRenderer.enabled = true;
     }
     private IEnumerator FlickerEffect()
-{
-    float flickerInterval = 0.1f; 
-    while (immunity)
     {
-        spriteRenderer.enabled = !spriteRenderer.enabled;
-        yield return new WaitForSeconds(flickerInterval);
+        float flickerInterval = 0.1f;
+        while (immunity)
+        {
+            spriteRenderer.enabled = !spriteRenderer.enabled;
+            yield return new WaitForSeconds(flickerInterval);
+        }
+        spriteRenderer.enabled = true;
     }
-    spriteRenderer.enabled = true; 
-}
     public void addHealth(int h)
     {
-        health+=h;
+        health += h;
         health = Mathf.Clamp(health, 0, maxHealth);
         UpdateHealthUI();
     }
     public void UpdateHealthUI()
     {
         HealthUI healthUI = FindObjectOfType<HealthUI>();
-        if(healthUI!=null)
+        if (healthUI != null)
         {
             healthUI.InitializeHearts();
         }
@@ -194,13 +195,14 @@ public class PlayerController : MonoBehaviour
         jumpForce += force;
     }
 
-    private void PowerupCountdownRoutine() {
+    private void PowerupCountdownRoutine()
+    {
         Invoke(nameof(PowerupEffects), 5);
     }
 
     private void PowerupEffects()
     {
-        switch(powerup)
+        switch (powerup)
         {
             case Powerup.Jump:
                 Debug.Log("Jump powerup");
@@ -214,19 +216,20 @@ public class PlayerController : MonoBehaviour
             case Powerup.Immunity:
                 Debug.Log("Immunity powerup");
                 break;
-            
+
         }
         hasPowerup = false;
     }
 
     // code to check if player has collided with powerup
-    private void OnTriggerEnter2D (Collider2D other)
+    private void OnCollisionEnter(Collision collisionInfo)
     {
-        if (other.CompareTag("Powerup"))
+        Debug.Log("Collided with something");
+        if (collisionInfo.collider.tag == "Powerup")
         {
             hasPowerup = true;
             Debug.Log("Collided with powerup");
-            switch(other.name)
+            switch (collisionInfo.collider.name)
             {
                 case "Default":
                     powerup = Powerup.Default;
@@ -244,7 +247,7 @@ public class PlayerController : MonoBehaviour
                     powerup = Powerup.Speed;
                     break;
             }
-            Destroy(other.gameObject);
+            Destroy(collisionInfo.collider.gameObject);
             PowerupCountdownRoutine();
         }
     }

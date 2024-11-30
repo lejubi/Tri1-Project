@@ -6,12 +6,12 @@ using UnityEngine;
 public class Powerup : ScriptableObject
 {
     public new string name;
-    public float jumpForce;
+    public float jump;
     public float speed;
     public bool immunity;
     public int health;
 
-    public void Print ()
+    public void Print()
     {
         Debug.Log("Name of powerup" + name);
     }
