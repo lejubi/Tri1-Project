@@ -1060,6 +1060,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4be99956584a565439d3f574fd669b0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  powerup: {fileID: 0}
   moveSpeed: 5
   jumpForce: 10
   groundLayer:
@@ -1067,6 +1068,7 @@ MonoBehaviour:
     m_Bits: 256
   groundCheck: {fileID: 1170188968}
   groundCheckRadius: 0.2
+  hasPowerup: 0
 --- !u!95 &1105640505
 Animator:
   serializedVersion: 5

@@ -10,9 +10,10 @@ GameObject:
   m_Component:
   - component: {fileID: 610240989365418578}
   - component: {fileID: 4835805921810175192}
-  m_Layer: 0
+  - component: {fileID: 1423075404507422697}
+  m_Layer: 8
   m_Name: Jump_Powerup
-  m_TagString: Untagged
+  m_TagString: Powerup
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -84,3 +85,16 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &1423075404507422697
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9101063323961984443}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1bc6c600d741340bf9f53a4a74f60dde, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  powerup: {fileID: 11400000, guid: 711e698555f6849efbec3252718def6b, type: 2}

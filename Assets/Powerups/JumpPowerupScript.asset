@@ -12,5 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d2d362c9ecad46189f6a5a870454e5d, type: 3}
   m_Name: JumpPowerupScript
   m_EditorClassIdentifier: 
-  jump: 6
-  speed: 1
+  name: Jump
+  jumpForce: 4
+  speed: 0
+  immunity: 0
+  health: 0
+  // jump: 6

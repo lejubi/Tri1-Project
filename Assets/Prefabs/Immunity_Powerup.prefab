@@ -11,9 +11,10 @@ GameObject:
   - component: {fileID: 3610019081484641659}
   - component: {fileID: 4498152485101684888}
   - component: {fileID: 2598223697307908776}
-  m_Layer: 0
-  m_Name: Invincible_Powerup
-  m_TagString: Untagged
+  - component: {fileID: 9054256201131194499}
+  m_Layer: 8
+  m_Name: Immunity_Powerup
+  m_TagString: Powerup
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -106,3 +107,16 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &9054256201131194499
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9183745561459366525}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1bc6c600d741340bf9f53a4a74f60dde, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  powerup: {fileID: 11400000, guid: 5b4da1be74ba84832bc698684d0150e8, type: 2}

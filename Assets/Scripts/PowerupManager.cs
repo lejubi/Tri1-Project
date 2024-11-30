@@ -82,6 +82,9 @@ public class PowerupManager : MonoBehaviour
             {
                 collider = powerupInstance.AddComponent<CircleCollider2D>();
             }
+
+            // collider.isTrigger = true;
+
             PhysicsMaterial2D bouncyMaterial = new PhysicsMaterial2D();
             bouncyMaterial.bounciness = 0.5f;
             bouncyMaterial.friction = 0.4f;

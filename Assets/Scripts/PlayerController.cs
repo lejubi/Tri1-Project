@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
@@ -18,6 +20,16 @@ public class PlayerController : MonoBehaviour
     private bool isGrounded;
     private float horizontalMove = 0f;
     private bool isJumping = false;
+    public bool hasPowerup;
+
+    enum Powerup {
+        Default,
+        Jump,
+        Speed,
+        Health,
+        Immunity
+    }
+
     private bool immunity = false;
     public int health;
     public int maxHealth = 3;
@@ -36,6 +48,8 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        // moveSpeed = powerup.speed;
+        // jumpForce = powerup.jump;
         moveSpeed += powerup.speed;
         jumpForce += powerup.jump;
         // checking if player is on the ground and if they are trying to move or jump
@@ -178,5 +192,60 @@ public class PlayerController : MonoBehaviour
     public void changeJumpForce(int force)
     {
         jumpForce += force;
+    }
+
+    private void PowerupCountdownRoutine() {
+        Invoke(nameof(PowerupEffects), 5);
+    }
+
+    private void PowerupEffects()
+    {
+        switch(powerup)
+        {
+            case Powerup.Jump:
+                Debug.Log("Jump powerup");
+                break;
+            case Powerup.Speed:
+                Debug.Log("Speed powerup");
+                break;
+            case Powerup.Health:
+                Debug.Log("Health powerup");
+                break;
+            case Powerup.Immunity:
+                Debug.Log("Immunity powerup");
+                break;
+            
+        }
+        hasPowerup = false;
+    }
+
+    // code to check if player has collided with powerup
+    private void OnTriggerEnter2D (Collider2D other)
+    {
+        if (other.CompareTag("Powerup"))
+        {
+            hasPowerup = true;
+            Debug.Log("Collided with powerup");
+            switch(other.name)
+            {
+                case "Default":
+                    powerup = Powerup.Default;
+                    break;
+                case "Health":
+                    powerup = Powerup.Health;
+                    break;
+                case "Immunity":
+                    powerup = Powerup.Immunity;
+                    break;
+                case "Jump":
+                    powerup = Powerup.Jump;
+                    break;
+                case "Speed":
+                    powerup = Powerup.Speed;
+                    break;
+            }
+            Destroy(other.gameObject);
+            PowerupCountdownRoutine();
+        }
     }
 }
