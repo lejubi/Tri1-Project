@@ -1,8 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System.Collections.Generic;
-using System.Collections;
+
 public class PlayerController : MonoBehaviour
 {
 
@@ -167,8 +166,36 @@ public class PlayerController : MonoBehaviour
 
         if (collider.CompareTag("Powerup"))
         {
-            Debug.Log("player touching powerup");
+            Debug.Log("player touching powerup " + collider.gameObject.name);
+
+            hasPowerup = true;
+
+            switch(collider.gameObject.name)
+            {
+                case "Health_Powerup(Clone)":
+                    Debug.Log("in health case");
+                    powerup = Powerup.Health;
+                    StartCoroutine(ApplyPowerupEffect());
+                    break;
+                case "Immunity_Powerup(Clone)":
+                    Debug.Log("in debug case");
+                    powerup = Powerup.Immunity;
+                    StartCoroutine(ApplyPowerupEffect());
+                    break;
+                case "Jump_Powerup(Clone)":
+                    Debug.Log("in jump case");
+                    powerup = Powerup.Jump;
+                    StartCoroutine(ApplyPowerupEffect());
+                    break;
+                case "Speed_Powerup(Clone)":
+                    Debug.Log("in speed case");
+                    powerup = Powerup.Speed;
+                    StartCoroutine(ApplyPowerupEffect());
+                    break;
+            }
+
             Destroy(collider.gameObject);
+            Debug.Log("destroyed powerup " + collider.gameObject.name);
         }
         if (collider.CompareTag("WinPortal"))
         {
@@ -209,83 +236,53 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void changeSpeed(int speed)
+    private IEnumerator ApplyPowerupEffect()
     {
-        moveSpeed += speed;
+        switch(powerup)
+        {
+            case Powerup.Jump:
+                jumpForce *= (float)1.4;
+                break;
+            case Powerup.Speed:
+                moveSpeed *= (float)1.4;
+                break;
+            case Powerup.Health:
+                addHealth(1);
+                break;
+            case Powerup.Immunity:
+                immunity = true;
+                break;
+        }
+
+        Debug.Log("powerup applied");
+        Invoke(nameof(ResetPowerupEffectCoroutine), 5f);
+
+        yield return null;
     }
 
-
-    public void setImmunityTrue()
+    private void ResetPowerupEffectCoroutine()
     {
-        immunity = true;
+        StartCoroutine(ResetPowerupEffect());
     }
 
-    public void setImmunityFalse()
-    {
-        immunity = false;
-    }
-
-    public void changeJumpForce(int force)
-    {
-        jumpForce += force;
-    }
-
-    private void PowerupCountdownRoutine()
-    {
-        Invoke(nameof(PowerupEffects), 5);
-    }
-
-    private void PowerupEffects()
+    private IEnumerator ResetPowerupEffect()
     {
         switch (powerup)
         {
             case Powerup.Jump:
-                Debug.Log("Jump powerup");
+                jumpForce /= (float)1.4;
                 break;
             case Powerup.Speed:
-                Debug.Log("Speed powerup");
+                moveSpeed /= (float)1.4;
                 break;
             case Powerup.Health:
-                Debug.Log("Health powerup");
                 break;
             case Powerup.Immunity:
-                Debug.Log("Immunity powerup");
+                immunity = false;
                 break;
-
         }
+
+        Debug.Log("powerup reset");
         hasPowerup = false;
-    }
-
-    // code to check if player has collided with powerup
-    // need to fix
-    private void OnCollisionEnter(Collision collisionInfo)
-    {
-        Debug.Log("Collided with something");
-        if (collisionInfo.collider.tag == "Powerup") ;
-        {
-            Debug.Log("Collided with powerup");
-            hasPowerup = true;
-            switch (collisionInfo.collider.name)
-            {
-                case "Default":
-                    powerup = Powerup.Default;
-                    break;
-                case "Health":
-                    powerup = Powerup.Health;
-                    break;
-                case "Immunity":
-                    powerup = Powerup.Immunity;
-                    break;
-                case "Jump":
-                    powerup = Powerup.Jump;
-                    break;
-                case "Speed":
-                    powerup = Powerup.Speed;
-                    break;
-            }
-            Destroy(collisionInfo.collider.gameObject);
-            PowerupCountdownRoutine();
-        }
-
     }
 }

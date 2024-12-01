@@ -13,7 +13,7 @@ public class Powerup : ScriptableObject
 
     public void Print ()
     {
-        Debug.Log("Name of powerup" + name);
+        Debug.Log("powerup " + name + " created");
     }
 
 }
