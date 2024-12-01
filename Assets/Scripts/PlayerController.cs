@@ -164,6 +164,17 @@ public class PlayerController : MonoBehaviour
                 StartCoroutine(InvincibilityFrames());
             }
         }
+
+        if (collider.CompareTag("Powerup"))
+        {
+            Debug.Log("player touching powerup");
+            Destroy(collider.gameObject);
+        }
+        if (collider.CompareTag("WinPortal"))
+        {
+            Debug.Log("You Won!");
+            gameManager.winScreen = true;
+        }
     }
     private IEnumerator InvincibilityFrames()
     {
@@ -274,11 +285,6 @@ public class PlayerController : MonoBehaviour
             }
             Destroy(collisionInfo.collider.gameObject);
             PowerupCountdownRoutine();
-        }
-        if (collisionInfo.collider.tag == "WinPortal")
-        {
-            Debug.Log("You Won!");
-            gameManager.winScreen = true;
         }
 
     }
