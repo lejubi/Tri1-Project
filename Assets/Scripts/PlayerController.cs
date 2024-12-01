@@ -79,7 +79,7 @@ public class PlayerController : MonoBehaviour
             isJumping = false;
         }
     }
-    private void Win()
+    private void CheckWin()
     {
         gameManager.winScreen = true;
     }
@@ -275,5 +275,11 @@ public class PlayerController : MonoBehaviour
             Destroy(collisionInfo.collider.gameObject);
             PowerupCountdownRoutine();
         }
+        if (collisionInfo.collider.tag == "WinPortal")
+        {
+            Debug.Log("You Won!");
+            gameManager.winScreen = true;
+        }
+
     }
 }
