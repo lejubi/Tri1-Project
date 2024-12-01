@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Undefined
   - Powerup
+  - WinPortal
   layers:
   - Default
   - TransparentFX

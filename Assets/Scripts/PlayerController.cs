@@ -17,6 +17,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private LayerMask harmfulObjectLayer;
     [SerializeField] private float invincibilityDuration = 1f;
     private bool isGrounded;
+    private bool playerIsFalling;
+    private float currentFallTime;
+    public float MaxFallTime = 3f;
     private float horizontalMove = 0f;
     private bool isJumping = false;
     public bool hasPowerup;
@@ -55,13 +58,14 @@ public class PlayerController : MonoBehaviour
         // checking if player is on the ground and if they are trying to move or jump
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
         horizontalMove = Input.GetAxisRaw("Horizontal") * moveSpeed;
-        
+
         if (Input.GetKeyDown(KeyCode.UpArrow) && isGrounded)
         {
             isJumping = true;
         }
 
         UpdateAnimationState();
+        CheckFalling();
     }
 
     void FixedUpdate()
@@ -74,9 +78,9 @@ public class PlayerController : MonoBehaviour
             isJumping = false;
         }
     }
-    private void Win()
+    private void CheckWin()
     {
-        gameManager.winScreen=true;
+        gameManager.winScreen = true;
     }
 
     void UpdateAnimationState()
@@ -119,17 +123,33 @@ public class PlayerController : MonoBehaviour
             transform.localScale = new Vector2(-20, 20);
     }
 
-        // powerup methods
+    private void CheckFalling()
+    {
+        if (!isGrounded)
+        {
+            currentFallTime += Time.deltaTime;
+        }
+        else
+        {
+            currentFallTime = 0;
+        }
+        if (currentFallTime >= MaxFallTime)
+        {
+            gameManager.deathScreen = true;
+        }
+    }
+
+    // powerup methods
     public void TakeDamage(int damage)
     {
-        if(!immunity)
+        if (!immunity)
         {
-            health-=damage;
+            health -= damage;
             health = Mathf.Clamp(health, 0, maxHealth);
             UpdateHealthUI();
             if (health <= 0)
             {
-                gameManager.deathScreen=true;
+                gameManager.deathScreen = true;
             }
         }
     }
@@ -186,6 +206,11 @@ public class PlayerController : MonoBehaviour
             Destroy(collider.gameObject);
             Debug.Log("destroyed powerup " + collider.gameObject.name);
         }
+        if (collider.CompareTag("WinPortal"))
+        {
+            Debug.Log("You Won!");
+            gameManager.winScreen = true;
+        }
     }
     private IEnumerator InvincibilityFrames()
     {
@@ -196,25 +221,25 @@ public class PlayerController : MonoBehaviour
         spriteRenderer.enabled = true;
     }
     private IEnumerator FlickerEffect()
-{
-    float flickerInterval = 0.1f; 
-    while (immunity)
     {
-        spriteRenderer.enabled = !spriteRenderer.enabled;
-        yield return new WaitForSeconds(flickerInterval);
+        float flickerInterval = 0.1f;
+        while (immunity)
+        {
+            spriteRenderer.enabled = !spriteRenderer.enabled;
+            yield return new WaitForSeconds(flickerInterval);
+        }
+        spriteRenderer.enabled = true;
     }
-    spriteRenderer.enabled = true; 
-}
     public void addHealth(int h)
     {
-        health+=h;
+        health += h;
         health = Mathf.Clamp(health, 0, maxHealth);
         UpdateHealthUI();
     }
     public void UpdateHealthUI()
     {
         HealthUI healthUI = FindObjectOfType<HealthUI>();
-        if(healthUI!=null)
+        if (healthUI != null)
         {
             healthUI.InitializeHearts();
         }
@@ -260,7 +285,7 @@ public class PlayerController : MonoBehaviour
 
     private IEnumerator ResetPowerupEffect()
     {
-        switch(powerup)
+        switch (powerup)
         {
             case Powerup.Jump:
                 jumpForce = 10;
@@ -280,7 +305,5 @@ public class PlayerController : MonoBehaviour
 
         Debug.Log("powerup reset");
         hasPowerup = false;
-
-        yield return null;
     }
 }
