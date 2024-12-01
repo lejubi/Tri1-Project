@@ -281,11 +281,6 @@ public class PlayerController : MonoBehaviour
 
     private void ResetPowerupEffectCoroutine()
     {
-        StartCoroutine(ResetPowerupEffect());
-    }
-
-    private IEnumerator ResetPowerupEffect()
-    {
         switch (powerup)
         {
             case Powerup.Jump:
@@ -306,7 +301,5 @@ public class PlayerController : MonoBehaviour
 
         Debug.Log("powerup reset");
         hasPowerup = false;
-
-        yield return null;
     }
 }
