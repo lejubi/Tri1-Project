@@ -284,5 +284,7 @@ public class PlayerController : MonoBehaviour
 
         Debug.Log("powerup reset");
         hasPowerup = false;
+
+        yield return null;
     }
 }
