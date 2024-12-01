@@ -104,15 +104,17 @@ public class PowerupManager : MonoBehaviour
     IEnumerator SettlePowerup(GameObject powerup)
     {
         yield return new WaitForSeconds(5f); 
-
-        Rigidbody2D rb = powerup.GetComponent<Rigidbody2D>();
-        while (!IsGrounded(powerup))
+        if (powerup != null)
         {
-            yield return null;
-        }
+            Rigidbody2D rb = powerup.GetComponent<Rigidbody2D>();
+            while (!IsGrounded(powerup))
+            {
+                yield return null;
+            }
 
-        rb.velocity = Vector2.zero;
-        rb.angularVelocity = 0f;
+            rb.velocity = Vector2.zero;
+            rb.angularVelocity = 0f;
+        }
     }
 
     bool IsGrounded(GameObject obj)
