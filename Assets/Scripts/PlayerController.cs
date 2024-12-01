@@ -21,6 +21,8 @@ public class PlayerController : MonoBehaviour
     private float horizontalMove = 0f;
     private bool isJumping = false;
     public bool hasPowerup;
+    private GameManager gameManager;
+
 
     enum Powerup {
         Default,
@@ -37,6 +39,8 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
+        gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
+
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
         health = maxHealth;
@@ -69,6 +73,10 @@ public class PlayerController : MonoBehaviour
             rb.AddForce(new Vector2(0f, jumpForce), ForceMode2D.Impulse);
             isJumping = false;
         }
+    }
+    private void Win()
+    {
+        gameManager.winScreen=true;
     }
 
     void UpdateAnimationState()
@@ -121,7 +129,7 @@ public class PlayerController : MonoBehaviour
             UpdateHealthUI();
             if (health <= 0)
             {
-                Debug.Log("Player has died!");
+                gameManager.deathScreen=true;
             }
         }
     }
