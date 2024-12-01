@@ -20,7 +20,7 @@ public class PlayerController : MonoBehaviour
     private bool isGrounded;
     private bool playerIsFalling;
     private float currentFallTime;
-    public float MaxFallTime = 4f;
+    public float MaxFallTime = 3f;
     private float horizontalMove = 0f;
     private bool isJumping = false;
     public bool hasPowerup;
