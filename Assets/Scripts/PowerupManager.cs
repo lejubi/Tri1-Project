@@ -12,8 +12,8 @@ public class PowerupManager : MonoBehaviour
     }
 
     public PowerupInfo[] powerups;
-    public float minSpawnInterval = 5f;
-    public float maxSpawnInterval = 15f;
+    public float minSpawnInterval = 7f;
+    public float maxSpawnInterval = 12f;
     public float spawnHeight = 30f;
     public LayerMask groundLayer;
 
@@ -57,40 +57,47 @@ public class PowerupManager : MonoBehaviour
             if (randomValue <= weightSum)
             {
                 selectedPowerup = powerup;
+                Debug.Log(selectedPowerup);
                 break;
             }
         }
 
-        if (selectedPowerup != null)
+        if (selectedPowerup!=null)
         {
-            Vector3 spawnPosition = CalculateSpawnPosition();
-
-            GameObject powerupInstance = Instantiate(selectedPowerup.prefab, spawnPosition, Quaternion.identity);
-            Rigidbody2D rb = powerupInstance.GetComponent<Rigidbody2D>();
-            
-            if (rb == null)
+            try
             {
-                rb = powerupInstance.AddComponent<Rigidbody2D>();
+                Vector3 spawnPosition = CalculateSpawnPosition();
+                GameObject powerupInstance = Instantiate(selectedPowerup.prefab, spawnPosition, Quaternion.identity);
+                Rigidbody2D rb = powerupInstance.GetComponent<Rigidbody2D>();
+                
+                if (rb == null)
+                {
+                    rb = powerupInstance.AddComponent<Rigidbody2D>();
+                }
+
+                rb.gravityScale = 1f;
+                rb.drag = 0.5f;
+                rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
+
+                CircleCollider2D collider = powerupInstance.GetComponent<CircleCollider2D>();
+                if (collider == null)
+                {
+                    collider = powerupInstance.AddComponent<CircleCollider2D>();
+                }
+
+                // collider.isTrigger = true;
+
+                PhysicsMaterial2D bouncyMaterial = new PhysicsMaterial2D();
+                bouncyMaterial.bounciness = 0.5f;
+                bouncyMaterial.friction = 0.4f;
+                collider.sharedMaterial = bouncyMaterial;
+
+                StartCoroutine(SettlePowerup(powerupInstance));
             }
-
-            rb.gravityScale = 1f;
-            rb.drag = 0.5f;
-            rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
-
-            CircleCollider2D collider = powerupInstance.GetComponent<CircleCollider2D>();
-            if (collider == null)
+            catch
             {
-                collider = powerupInstance.AddComponent<CircleCollider2D>();
+                Debug.Log("Invalid Powerup");
             }
-
-            // collider.isTrigger = true;
-
-            PhysicsMaterial2D bouncyMaterial = new PhysicsMaterial2D();
-            bouncyMaterial.bounciness = 0.5f;
-            bouncyMaterial.friction = 0.4f;
-            collider.sharedMaterial = bouncyMaterial;
-
-            StartCoroutine(SettlePowerup(powerupInstance));
         }
     }
     Vector3 CalculateSpawnPosition()

@@ -24,11 +24,10 @@ public class PlayerController : MonoBehaviour
     private bool isJumping = false;
     public bool hasPowerup;
     private GameManager gameManager;
+    public Color originalColor;
 
 
-    enum Powerup
-    {
-        Default,
+    enum Powerup {
         Jump,
         Speed,
         Health,
@@ -51,6 +50,7 @@ public class PlayerController : MonoBehaviour
         // to prevent rotation of player
         rb.freezeRotation = true;
         spriteRenderer = GetComponent<SpriteRenderer>();
+        originalColor = spriteRenderer.color;
     }
 
     void Update()
@@ -181,21 +181,30 @@ public class PlayerController : MonoBehaviour
                 case "Health_Powerup(Clone)":
                     Debug.Log("in health case");
                     powerup = Powerup.Health;
+                    immunity = false;
+                    moveSpeed = 5;
+                    jumpForce = 10;
                     StartCoroutine(ApplyPowerupEffect());
                     break;
                 case "Immunity_Powerup(Clone)":
                     Debug.Log("in debug case");
                     powerup = Powerup.Immunity;
+                    moveSpeed = 5;
+                    jumpForce = 10;
                     StartCoroutine(ApplyPowerupEffect());
                     break;
                 case "Jump_Powerup(Clone)":
                     Debug.Log("in jump case");
                     powerup = Powerup.Jump;
+                    immunity = false;
+                    moveSpeed = 5;
                     StartCoroutine(ApplyPowerupEffect());
                     break;
                 case "Speed_Powerup(Clone)":
                     Debug.Log("in speed case");
                     powerup = Powerup.Speed;
+                    immunity = false;
+                    jumpForce = 10;
                     StartCoroutine(ApplyPowerupEffect());
                     break;
             }
@@ -236,22 +245,31 @@ public class PlayerController : MonoBehaviour
             healthUI.InitializeHearts();
         }
     }
+    private void ApplyColorTint(Color color)
+    {
+        spriteRenderer.color = color;
+    }
 
     private IEnumerator ApplyPowerupEffect()
     {
+        
         switch(powerup)
         {
             case Powerup.Jump:
                 jumpForce *= (float)1.4;
+                ApplyColorTint(Color.green);
                 break;
             case Powerup.Speed:
                 moveSpeed *= (float)1.4;
+                ApplyColorTint(Color.red);
                 break;
             case Powerup.Health:
                 addHealth(1);
+                spriteRenderer.color = originalColor;
                 break;
             case Powerup.Immunity:
                 immunity = true;
+                ApplyColorTint(Color.blue);
                 break;
         }
 
@@ -271,15 +289,18 @@ public class PlayerController : MonoBehaviour
         switch (powerup)
         {
             case Powerup.Jump:
-                jumpForce /= (float)1.4;
+                jumpForce = 10;
+                spriteRenderer.color = originalColor;
                 break;
             case Powerup.Speed:
-                moveSpeed /= (float)1.4;
+                moveSpeed = 5;
+                spriteRenderer.color = originalColor;
                 break;
             case Powerup.Health:
                 break;
             case Powerup.Immunity:
                 immunity = false;
+                spriteRenderer.color = originalColor;
                 break;
         }
 
