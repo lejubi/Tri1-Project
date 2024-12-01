@@ -143,6 +143,12 @@ public class PlayerController : MonoBehaviour
                 StartCoroutine(InvincibilityFrames());
             }
         }
+
+        if (collider.CompareTag("Powerup"))
+        {
+            Debug.Log("player touching powerup");
+            Destroy(collider.gameObject);
+        }
     }
     private IEnumerator InvincibilityFrames()
     {
