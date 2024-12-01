@@ -1,31 +1,58 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
+    public static GameManager Instance;
+    public bool deathScreen = false;
+    public bool homeScreen = false;
+    public bool platformerScreen = false;
+    public bool winScreen = false;
 
-    public GameObject titleScreen;
-    public GameObject gameOverScreen;
-    public bool isGameActive;
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    private void Start()
+    {
+        SceneManager.LoadScene("Start");
+    }
+
+    private void Update()
+    {
+        if (deathScreen)
+        {
+            SceneManager.LoadScene("Death");
+            deathScreen = false;
+        }
+        else if (homeScreen)
+        {
+            SceneManager.LoadScene("Start");
+            homeScreen = false;
+        }
+        else if (platformerScreen)
+        {
+            SceneManager.LoadScene("Platformer");
+            platformerScreen = false;
+        }
+        else if (winScreen)
+        {
+            SceneManager.LoadScene("Win");
+            winScreen = false;
+        }
+    }
 
     public void StartGame()
     {
-        isGameActive = true;
-        titleScreen.SetActive(false);
-    }
-
-    public void GameOver()
-    {
-        isGameActive = false;
-        gameOverScreen.SetActive(true);
-    }
-
-    public void RestartGame()
-    {
-        // restarts game by reloading the scene
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        SceneManager.LoadScene("Start");
     }
 }
