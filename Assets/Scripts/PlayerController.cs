@@ -29,12 +29,15 @@ public class PlayerController : MonoBehaviour
     private Powerup currentPowerup;
     private Coroutine powerupCoroutine;
 
-    // enum Powerup {
-    //     Jump,
-    //     Speed,
-    //     Health,
-    //     Immunity
-    // }
+    public enum PlayerState
+    {
+        Idle,
+        Running,
+        JumpingUp,
+        JumpingDown
+    }
+    public PlayerState playerState;
+
 
     public bool immunity = false;
     public int health;
@@ -92,32 +95,21 @@ public class PlayerController : MonoBehaviour
         {
             if (Mathf.Abs(horizontalMove) > 0.1f)
             {
-                animator.SetBool("isRunning", true);
-                animator.SetBool("isIdle", false);
+                playerState = PlayerState.Running;
             }
             else
             {
-                animator.SetBool("isRunning", false);
-                animator.SetBool("isIdle", true);
+                playerState = PlayerState.Idle;
             }
-            animator.SetBool("isJumpUp", false);
-            animator.SetBool("isJumpDown", false);
         }
         else
         {
-            if (rb.velocity.y > 0)
-            {
-                animator.SetBool("isJumpUp", true);
-                animator.SetBool("isJumpDown", false);
-            }
-            else
-            {
-                animator.SetBool("isJumpUp", false);
-                animator.SetBool("isJumpDown", true);
-            }
-            animator.SetBool("isRunning", false);
-            animator.SetBool("isIdle", false);
+            playerState = rb.velocity.y > 0 ? PlayerState.JumpingUp : PlayerState.JumpingDown;
         }
+        animator.SetBool("isRunning", playerState == PlayerState.Running);
+        animator.SetBool("isIdle", playerState == PlayerState.Idle);
+        animator.SetBool("isJumpUp", playerState == PlayerState.JumpingUp);
+        animator.SetBool("isJumpDown", playerState == PlayerState.JumpingDown);
 
         if (horizontalMove > 0)
             transform.localScale = new Vector2(20, 20);
