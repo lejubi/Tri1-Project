@@ -8,9 +8,9 @@ public class PlayerController : MonoBehaviour
     private Animator animator;
     private Rigidbody2D rb;
 
-    [SerializeField] private Powerup powerup;
-    [SerializeField] private float moveSpeed;
-    [SerializeField] private float jumpForce;
+    public Powerup powerup;
+    public float moveSpeed;
+    public float jumpForce;
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private Transform groundCheck;
     [SerializeField] private float groundCheckRadius = 0.1f;
@@ -26,15 +26,20 @@ public class PlayerController : MonoBehaviour
     private GameManager gameManager;
     public Color originalColor;
 
+    private Powerup currentPowerup;
+    private Coroutine powerupCoroutine;
 
-    enum Powerup {
-        Jump,
-        Speed,
-        Health,
-        Immunity
+    public enum PlayerState
+    {
+        Idle,
+        Running,
+        JumpingUp,
+        JumpingDown
     }
+    public PlayerState playerState;
 
-    private bool immunity = false;
+
+    public bool immunity = false;
     public int health;
     public int maxHealth = 3;
     private SpriteRenderer spriteRenderer;
@@ -90,32 +95,21 @@ public class PlayerController : MonoBehaviour
         {
             if (Mathf.Abs(horizontalMove) > 0.1f)
             {
-                animator.SetBool("isRunning", true);
-                animator.SetBool("isIdle", false);
+                playerState = PlayerState.Running;
             }
             else
             {
-                animator.SetBool("isRunning", false);
-                animator.SetBool("isIdle", true);
+                playerState = PlayerState.Idle;
             }
-            animator.SetBool("isJumpUp", false);
-            animator.SetBool("isJumpDown", false);
         }
         else
         {
-            if (rb.velocity.y > 0)
-            {
-                animator.SetBool("isJumpUp", true);
-                animator.SetBool("isJumpDown", false);
-            }
-            else
-            {
-                animator.SetBool("isJumpUp", false);
-                animator.SetBool("isJumpDown", true);
-            }
-            animator.SetBool("isRunning", false);
-            animator.SetBool("isIdle", false);
+            playerState = rb.velocity.y > 0 ? PlayerState.JumpingUp : PlayerState.JumpingDown;
         }
+        animator.SetBool("isRunning", playerState == PlayerState.Running);
+        animator.SetBool("isIdle", playerState == PlayerState.Idle);
+        animator.SetBool("isJumpUp", playerState == PlayerState.JumpingUp);
+        animator.SetBool("isJumpDown", playerState == PlayerState.JumpingDown);
 
         if (horizontalMove > 0)
             transform.localScale = new Vector2(20, 20);
@@ -176,39 +170,55 @@ public class PlayerController : MonoBehaviour
 
             hasPowerup = true;
 
-            switch(collider.gameObject.name)
-            {
-                case "Health_Powerup(Clone)":
-                    Debug.Log("in health case");
-                    powerup = Powerup.Health;
-                    immunity = false;
-                    moveSpeed = 5;
-                    jumpForce = 10;
-                    StartCoroutine(ApplyPowerupEffect());
-                    break;
-                case "Immunity_Powerup(Clone)":
-                    Debug.Log("in debug case");
-                    powerup = Powerup.Immunity;
-                    moveSpeed = 5;
-                    jumpForce = 10;
-                    StartCoroutine(ApplyPowerupEffect());
-                    break;
-                case "Jump_Powerup(Clone)":
-                    Debug.Log("in jump case");
-                    powerup = Powerup.Jump;
-                    immunity = false;
-                    moveSpeed = 5;
-                    StartCoroutine(ApplyPowerupEffect());
-                    break;
-                case "Speed_Powerup(Clone)":
-                    Debug.Log("in speed case");
-                    powerup = Powerup.Speed;
-                    immunity = false;
-                    jumpForce = 10;
-                    StartCoroutine(ApplyPowerupEffect());
-                    break;
-            }
+            Powerup newPowerup = collider.GetComponent<PowerupDisplay>().powerup;
 
+            // switch(collider.gameObject.name)
+            // {
+            //     case "Health_Powerup(Clone)":
+            //         Debug.Log("in health case");
+            //         powerup = Powerup.Health;
+            //         immunity = false;
+            //         moveSpeed = 5;
+            //         jumpForce = 10;
+            //         StartCoroutine(ApplyPowerupEffect());
+            //         break;
+            //     case "Immunity_Powerup(Clone)":
+            //         Debug.Log("in debug case");
+            //         powerup = Powerup.Immunity;
+            //         moveSpeed = 5;
+            //         jumpForce = 10;
+            //         StartCoroutine(ApplyPowerupEffect());
+            //         break;
+            //     case "Jump_Powerup(Clone)":
+            //         Debug.Log("in jump case");
+            //         powerup = Powerup.Jump;
+            //         immunity = false;
+            //         moveSpeed = 5;
+            //         StartCoroutine(ApplyPowerupEffect());
+            //         break;
+            //     case "Speed_Powerup(Clone)":
+            //         Debug.Log("in speed case");
+            //         powerup = Powerup.Speed;
+            //         immunity = false;
+            //         jumpForce = 10;
+            //         StartCoroutine(ApplyPowerupEffect());
+            //         break;
+            // }
+
+            if (newPowerup != null)
+            {
+                if (powerupCoroutine != null)
+                {
+                    StopCoroutine(powerupCoroutine);
+                    if (currentPowerup != null)
+                    {
+                        currentPowerup.RemovePowerupEffect(this);
+                    }
+                }
+                currentPowerup = newPowerup;
+                powerupCoroutine = StartCoroutine(ApplyPowerupEffect(newPowerup));
+                Destroy(collider.gameObject);
+            }
             Debug.Log("destroyed powerup");
             Destroy(collider.gameObject);
         }
@@ -217,7 +227,11 @@ public class PlayerController : MonoBehaviour
     {
         immunity = true;
         StartCoroutine(FlickerEffect());
+        Invoke(nameof(ResetInvincibility), invincibilityDuration);
         yield return new WaitForSeconds(invincibilityDuration);
+    }
+    private void ResetInvincibility()
+    {
         immunity = false;
         spriteRenderer.enabled = true;
     }
@@ -245,61 +259,48 @@ public class PlayerController : MonoBehaviour
             healthUI.InitializeHearts();
         }
     }
-    private void ApplyColorTint(Color color)
+    public void ApplyColorTint(Color color)
     {
-        spriteRenderer.color = color;
+        Color tintedColor = color;
+        tintedColor.a = spriteRenderer.color.a;
+        spriteRenderer.color = tintedColor;
     }
 
-    private IEnumerator ApplyPowerupEffect()
+    private IEnumerator ApplyPowerupEffect(Powerup powerup)
     {
-        
-        switch(powerup)
-        {
-            case Powerup.Jump:
-                jumpForce *= (float)1.4;
-                ApplyColorTint(Color.green);
-                break;
-            case Powerup.Speed:
-                moveSpeed *= (float)1.4;
-                ApplyColorTint(Color.red);
-                break;
-            case Powerup.Health:
-                addHealth(1);
-                spriteRenderer.color = originalColor;
-                break;
-            case Powerup.Immunity:
-                immunity = true;
-                ApplyColorTint(Color.blue);
-                break;
-        }
-
+        powerup.ApplyPowerupEffect(this);
         Debug.Log("powerup applied");
-        Invoke(nameof(ResetPowerupEffectCoroutine), 5f);
 
-        yield return null;
-    }
+        yield return new WaitForSeconds(5f);
 
-    private void ResetPowerupEffectCoroutine()
-    {
-        switch (powerup)
-        {
-            case Powerup.Jump:
-                jumpForce = 10;
-                spriteRenderer.color = originalColor;
-                break;
-            case Powerup.Speed:
-                moveSpeed = 5;
-                spriteRenderer.color = originalColor;
-                break;
-            case Powerup.Health:
-                break;
-            case Powerup.Immunity:
-                immunity = false;
-                spriteRenderer.color = originalColor;
-                break;
-        }
+        powerup.RemovePowerupEffect(this);
+        Debug.Log("powerup removed");
 
-        Debug.Log("powerup reset");
+        currentPowerup = null;
         hasPowerup = false;
     }
+
+    // private void ResetPowerupEffectCoroutine()
+    // {
+    //     switch (powerup)
+    //     {
+    //         case Powerup.Jump:
+    //             jumpForce = 10;
+    //             spriteRenderer.color = originalColor;
+    //             break;
+    //         case Powerup.Speed:
+    //             moveSpeed = 5;
+    //             spriteRenderer.color = originalColor;
+    //             break;
+    //         case Powerup.Health:
+    //             break;
+    //         case Powerup.Immunity:
+    //             immunity = false;
+    //             spriteRenderer.color = originalColor;
+    //             break;
+    //     }
+
+    //     Debug.Log("powerup reset");
+    //     hasPowerup = false;
+    // }
 }
