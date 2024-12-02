@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: JumpPowerupScript
   m_EditorClassIdentifier: 
   name: Jump
-  jumpForce: 4
-  speed: 0
+  jumpForce: 15
+  speed: 5
   immunity: 0
   health: 0
-  // jump: 6
+  color: {r: 0, g: 1, b: 0, a: 0}

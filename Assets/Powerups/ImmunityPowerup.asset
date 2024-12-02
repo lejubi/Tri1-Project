@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: ImmunityPowerup
   m_EditorClassIdentifier: 
   name: Immunity
-  jumpForce: 0
-  speed: 0
+  jumpForce: 10
+  speed: 5
   immunity: 1
   health: 0
+  color: {r: 0, g: 0, b: 1, a: 0}
