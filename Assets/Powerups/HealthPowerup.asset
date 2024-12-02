@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: HealthPowerup
   m_EditorClassIdentifier: 
   name: Health
-  jumpForce: 0
-  speed: 0
+  jumpForce: 10
+  speed: 5
   immunity: 0
   health: 1
+  color: {r: 0.21960786, g: 0.21960786, b: 0.21960786, a: 0}
